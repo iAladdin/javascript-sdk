@@ -1,7 +1,8 @@
 // import * as crypto from "../src/crypto"
 import { crypto } from "../src"
-import bip39 from "bip39"
+// import bip39 from "bip39"
 
+const bip39 = require('bip39')
 const privateKey = crypto.generatePrivateKey()
 const keyStore = crypto.generateKeyStore(privateKey, "1234567")
 

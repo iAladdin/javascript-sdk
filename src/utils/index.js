@@ -56,9 +56,7 @@ export const ab2hexstring = arr => {
   let result = ""
   for (let i = 0; i < arr.length; i++) {
     let str = arr[i].toString(16)
-    str = str.length === 0 ? "00"
-      : str.length === 1 ? "0" + str
-        : str
+    str = str.length === 0 ? "00" : str.length === 1 ? `0${str}` : str
     result += str
   }
   return result
@@ -85,8 +83,8 @@ export const int2hex = num => {
   if (typeof num !== "number") {
     throw new Error("int2hex expects a number")
   }
-  let h = num.toString(16)
-  return h.length % 2 ? "0" + h : h
+  const h = num.toString(16)
+  return h.length % 2 ? `0${h}` : h
 }
 
 /**
@@ -100,10 +98,14 @@ export const num2hexstring = (num, size = 1, littleEndian = false) => {
   if (typeof num !== "number") throw new Error("num must be numeric")
   if (num < 0) throw new RangeError("num is unsigned (>= 0)")
   if (size % 1 !== 0) throw new Error("size must be a whole integer")
-  if (!Number.isSafeInteger(num)) throw new RangeError(`num (${num}) must be a safe integer`)
-  size = size * 2
+  if (!Number.isSafeInteger(num))
+    throw new RangeError(`num (${num}) must be a safe integer`)
+  size *= 2
   let hexstring = num.toString(16)
-  hexstring = hexstring.length % size === 0 ? hexstring : ("0".repeat(size) + hexstring).substring(hexstring.length)
+  hexstring =
+    hexstring.length % size === 0
+      ? hexstring
+      : ("0".repeat(size) + hexstring).substring(hexstring.length)
   if (littleEndian) hexstring = reverseHex(hexstring)
   return hexstring
 }
@@ -113,19 +115,20 @@ export const num2hexstring = (num, size = 1, littleEndian = false) => {
  * @param {Number} num - The number
  * @returns {string} hexstring of the variable Int.
  */
-export const num2VarInt = (num) => {
+export const num2VarInt = num => {
   if (num < 0xfd) {
     return num2hexstring(num)
-  } else if (num <= 0xffff) {
-    // uint16
-    return "fd" + num2hexstring(num, 2, true)
-  } else if (num <= 0xffffffff) {
-    // uint32
-    return "fe" + num2hexstring(num, 4, true)
-  } else {
-    // uint64
-    return "ff" + num2hexstring(num, 8, true)
   }
+  if (num <= 0xffff) {
+    // uint16
+    return `fd${num2hexstring(num, 2, true)}`
+  }
+  if (num <= 0xffffffff) {
+    // uint32
+    return `fe${num2hexstring(num, 4, true)}`
+  }
+  // uint64
+  return `ff${num2hexstring(num, 8, true)}`
 }
 
 /**
@@ -137,10 +140,13 @@ export const num2VarInt = (num) => {
 export const hexXor = (str1, str2) => {
   ensureHex(str1)
   ensureHex(str2)
-  if (str1.length !== str2.length) throw new Error("strings are disparate lengths")
+  if (str1.length !== str2.length)
+    throw new Error("strings are disparate lengths")
   const result = []
   for (let i = 0; i < str1.length; i += 2) {
-    result.push(parseInt(str1.substr(i, 2), 16) ^ parseInt(str2.substr(i, 2), 16))
+    result.push(
+      parseInt(str1.substr(i, 2), 16) ^ parseInt(str2.substr(i, 2), 16)
+    )
   }
   return ab2hexstring(result)
 }
@@ -151,8 +157,9 @@ export const hexXor = (str1, str2) => {
  * @returns {Uint8Array}
  */
 export const reverseArray = arr => {
-  if (typeof arr !== "object" || !arr.length) throw new Error("reverseArray expects an array")
-  let result = new Uint8Array(arr.length)
+  if (typeof arr !== "object" || !arr.length)
+    throw new Error("reverseArray expects an array")
+  const result = new Uint8Array(arr.length)
   for (let i = 0; i < arr.length; i++) {
     result[i] = arr[arr.length - 1 - i]
   }
@@ -190,7 +197,9 @@ const hexRegex = /^([0-9A-Fa-f]{2})*$/
 export const isHex = str => {
   try {
     return hexRegex.test(str)
-  } catch (err) { return false }
+  } catch (err) {
+    return false
+  }
 }
 
 /**
@@ -206,8 +215,9 @@ export const ensureHex = str => {
  * @param {string} hex message to hash
  * @returns {string} hash output
  */
-export const sha256ripemd160 = (hex) => {
-  if (typeof hex !== "string") throw new Error("sha256ripemd160 expects a string")
+export const sha256ripemd160 = hex => {
+  if (typeof hex !== "string")
+    throw new Error("sha256ripemd160 expects a string")
   if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
   const hexEncoded = hexEncoding.parse(hex)
   const ProgramSha256 = SHA256(hexEncoded)
@@ -219,7 +229,7 @@ export const sha256ripemd160 = (hex) => {
  * @param {string} hex message to hash
  * @returns {string} hash output
  */
-export const sha256 = (hex) => {
+export const sha256 = hex => {
   if (typeof hex !== "string") throw new Error("sha256 expects a hex string")
   if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
   const hexEncoded = hexEncoding.parse(hex)
@@ -231,7 +241,7 @@ export const sha256 = (hex) => {
  * @param {string} hex message to hash
  * @returns {string} hash output
  */
-export const sha3 = (hex) => {
+export const sha3 = hex => {
   if (typeof hex !== "string") throw new Error("sha3 expects a hex string")
   if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
   const hexEncoded = hexEncoding.parse(hex)

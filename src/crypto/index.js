@@ -2,29 +2,25 @@
  * @module crypto
  */
 
-import csprng from "secure-random"
+import csprng from "secure-random" //
 import bech32 from "bech32"
-import cryp from "crypto-browserify"
+import cryp from "crypto"
+import randomBytes from "randombytes"
 import uuid from "uuid"
 import is from "is_js"
 import bip32 from "bip32"
-import  * as bip39  from "bip39"
+import * as bip39 from "bip39"
 import { ec as EC } from "elliptic"
 import ecc from "tiny-secp256k1"
 
-import {
-  ab2hexstring,
-  sha3,
-  sha256,
-  sha256ripemd160,
-} from "../utils"
+import { ab2hexstring, sha3, sha256, sha256ripemd160 } from "../utils"
 
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32
 const MNEMONIC_LEN = 256
 const CURVE = "secp256k1"
 
-//hdpath
+// hdpath
 const HDPATH = "44'/714'/0'/0/0"
 
 const ec = new EC(CURVE)
@@ -33,25 +29,27 @@ const ec = new EC(CURVE)
  * Decodes an address in bech32 format.
  * @param {string} value the bech32 address to decode
  */
-export const decodeAddress = (value) => {
-  const decodeAddress = bech32.decode(value)
-  return Buffer.from(bech32.fromWords(decodeAddress.words))
+export const decodeAddress = value => {
+  const decodeAddressString = bech32.decode(value)
+  return Buffer.from(bech32.fromWords(decodeAddressString.words))
 }
 
 /**
  * checek address whether is valid
  * @param {string} address the bech32 address to decode
  */
-export const checkAddress = (address) => {
+export const checkAddress = address => {
   try {
-    const decodeAddress = bech32.decode(address)
-    if(decodeAddress.prefix === "tbnb" ||
-       decodeAddress.prefix === "bnb") {
+    const decodeAddressString = bech32.decode(address)
+    if (
+      decodeAddressString.prefix === "tbnb" ||
+      decodeAddressString.prefix === "bnb"
+    ) {
       return true
     }
 
     return false
-  } catch(err) {
+  } catch (err) {
     return false
   }
 }
@@ -72,7 +70,8 @@ export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
  * @param {number} len output length (default: 32 bytes)
  * @returns {string} entropy bytes hexstring
  */
-export const generatePrivateKey = (len = PRIVKEY_LEN) => ab2hexstring(csprng(len))
+export const generatePrivateKey = (len = PRIVKEY_LEN) =>
+  ab2hexstring(csprng(len))
 
 /**
  * Generates an arrayBuffer filled with random bits.
@@ -86,7 +85,7 @@ export const generateRandomArray = length => csprng(length)
  * @return {Elliptic.PublicKey} public key hexstring
  */
 export const getPublicKey = publicKey => {
-  let keyPair = ec.keyFromPublic(publicKey, "hex")
+  const keyPair = ec.keyFromPublic(publicKey, "hex")
   return keyPair.getPublic()
 }
 
@@ -134,7 +133,10 @@ export const getAddressFromPublicKey = (publicKeyHex, prefix) => {
  * @param {string} privateKeyHex the private key hexstring
  */
 export const getAddressFromPrivateKey = (privateKeyHex, prefix) => {
-  return getAddressFromPublicKey(getPublicKeyFromPrivateKey(privateKeyHex), prefix)
+  return getAddressFromPublicKey(
+    getPublicKeyFromPrivateKey(privateKeyHex),
+    prefix
+  )
 }
 
 /**
@@ -172,8 +174,8 @@ export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
  * @return {object} the keystore object.
  */
 export const generateKeyStore = (privateKeyHex, password) => {
-  const salt = cryp.randomBytes(32)
-  const iv = cryp.randomBytes(16)
+  const salt = randomBytes(32)
+  const iv = randomBytes(16)
   const cipherAlg = "aes-256-ctr"
 
   const kdf = "pbkdf2"
@@ -184,19 +186,31 @@ export const generateKeyStore = (privateKeyHex, password) => {
     prf: "hmac-sha256"
   }
 
-  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256")
+  const derivedKey = cryp.pbkdf2Sync(
+    Buffer.from(password),
+    salt,
+    kdfparams.c,
+    kdfparams.dklen,
+    "sha256"
+  )
   const cipher = cryp.createCipheriv(cipherAlg, derivedKey.slice(0, 32), iv)
   if (!cipher) {
     throw new Error("Unsupported cipher")
   }
 
-  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKeyHex, "hex")), cipher.final()])
-  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, "hex")])
+  const ciphertext = Buffer.concat([
+    cipher.update(Buffer.from(privateKeyHex, "hex")),
+    cipher.final()
+  ])
+  const bufferValue = Buffer.concat([
+    derivedKey.slice(16, 32),
+    Buffer.from(ciphertext, "hex")
+  ])
 
   return {
     version: 1,
     id: uuid.v4({
-      random: cryp.randomBytes(16)
+      random: randomBytes(16)
     }),
     crypto: {
       ciphertext: ciphertext.toString("hex"),
@@ -205,7 +219,7 @@ export const generateKeyStore = (privateKeyHex, password) => {
       },
       cipher: cipherAlg,
       kdf,
-      kdfparams: kdfparams,
+      kdfparams,
       // mac must use sha3 according to web3 secret storage spec
       mac: sha3(bufferValue.toString("hex"))
     }
@@ -218,7 +232,6 @@ export const generateKeyStore = (privateKeyHex, password) => {
  * @param {string} password the password.
  */
 export const getPrivateKeyFromKeyStore = (keystore, password) => {
-
   if (!is.string(password)) {
     throw new Error("No password given.")
   }
@@ -230,7 +243,13 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     throw new Error("Unsupported parameters to PBKDF2")
   }
 
-  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.c, kdfparams.dklen, "sha256")
+  const derivedKey = cryp.pbkdf2Sync(
+    Buffer.from(password),
+    Buffer.from(kdfparams.salt, "hex"),
+    kdfparams.c,
+    kdfparams.dklen,
+    "sha256"
+  )
   const ciphertext = Buffer.from(json.crypto.ciphertext, "hex")
   const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext])
 
@@ -241,12 +260,21 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     // the sha256 mac was not compatible with ethereum keystores, so it was changed to sha3 for mainnet.
     const macLegacy = sha256(bufferValue.toString("hex"))
     if (macLegacy !== json.crypto.mac) {
-      throw new Error("Keystore mac check failed (sha3 & sha256) - wrong password?")
+      throw new Error(
+        "Keystore mac check failed (sha3 & sha256) - wrong password?"
+      )
     }
   }
 
-  const decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 32), Buffer.from(json.crypto.cipherparams.iv, "hex"))
-  const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("hex")
+  const decipher = cryp.createDecipheriv(
+    json.crypto.cipher,
+    derivedKey.slice(0, 32),
+    Buffer.from(json.crypto.cipherparams.iv, "hex")
+  )
+  const privateKey = Buffer.concat([
+    decipher.update(ciphertext),
+    decipher.final()
+  ]).toString("hex")
 
   return privateKey
 }
@@ -270,10 +298,14 @@ export const validateMnemonic = bip39.validateMnemonic
  * @return {string} hexstring
  */
 export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
-  if(!bip39.validateMnemonic(mnemonic)){
+  console.log("[Aladdin]", mnemonic)
+  if (!bip39.validateMnemonic(mnemonic)) {
+    console.log("[Aladdin]", "wrong mnemonic format")
     throw new Error("wrong mnemonic format")
   }
-  const seed = bip39.mnemonicToSeedSync(mnemonic)
+  console.log("[Aladdin] mnemonic okay", bip39)
+  const seed = bip39.mnemonicToSeed(mnemonic)
+  console.log("[Aladdin]", seed)
   if (derive) {
     const master = bip32.fromSeed(seed)
     const child = master.derivePath(HDPATH)

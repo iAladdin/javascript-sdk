@@ -2,10 +2,10 @@
   "name": "@binance-chain/javascript-sdk",
   "version": "2.11.0",
   "license": "Apache-2.0",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
-    "build": "rm -rf lib && npx babel src -d lib",
+    "build": "rm -rf dist && npx babel src -d dist",
     "build:docs": "npx jsdoc-to-markdown -f src/**/*.js > docs/jsdoc.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__"
@@ -46,14 +46,7 @@
     "qunit": "^2.9.1"
   },
   "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-async-to-generator"
-    ]
-  },
-  "files": [
-    "lib/*"
-  ]
+    "presets": ["@babel/preset-env"],
+    "plugins": ["@babel/plugin-transform-async-to-generator"]
+  }
 }

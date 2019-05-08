@@ -298,14 +298,10 @@ export const validateMnemonic = bip39.validateMnemonic
  * @return {string} hexstring
  */
 export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
-  console.log("[Aladdin]", mnemonic)
   if (!bip39.validateMnemonic(mnemonic)) {
-    console.log("[Aladdin]", "wrong mnemonic format")
     throw new Error("wrong mnemonic format")
   }
-  console.log("[Aladdin] mnemonic okay", bip39)
   const seed = bip39.mnemonicToSeed(mnemonic)
-  console.log("[Aladdin]", seed)
   if (derive) {
     const master = bip32.fromSeed(seed)
     const child = master.derivePath(HDPATH)

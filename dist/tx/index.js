@@ -3,13 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = exports.typePrefix = exports.txType = void 0;
+exports["default"] = void 0;
 
 var crypto = _interopRequireWildcard(require("../crypto/"));
 
 var encoder = _interopRequireWildcard(require("../encoder/"));
 
 var _varint = require("../encoder/varint");
+
+var _constants = require("../constants");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
@@ -19,53 +21,33 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var txType = {
-  MsgSend: "MsgSend",
-  NewOrderMsg: "NewOrderMsg",
-  CancelOrderMsg: "CancelOrderMsg",
-  StdTx: "StdTx",
-  PubKeySecp256k1: "PubKeySecp256k1",
-  SignatureSecp256k1: "SignatureSecp256k1"
-};
-exports.txType = txType;
-var typePrefix = {
-  MsgSend: "2A2C87FA",
-  NewOrderMsg: "CE6DC043",
-  CancelOrderMsg: "166E681B",
-  StdTx: "F0625DEE",
-  PubKeySecp256k1: "EB5AE987",
-  SignatureSecp256k1: "7FC4A495"
-  /**
-   * Creates a new transaction object.
-   * @example
-   * var rawTx = {
-   *   account_number: 1,
-   *   chain_id: 'bnbchain-1000',
-   *   memo: '',
-   *   msg: {},
-   *   type: 'NewOrderMsg',
-   *   sequence: 29,
-   * };
-   * var tx = new Transaction(rawTx);
-   * @property {Buffer} raw The raw vstruct encoded transaction
-   * @param {Number} data.account_number account number
-   * @param {String} data.chain_id bnbChain Id
-   * @param {String} data.memo transaction memo
-   * @param {String} type transaction type
-   * @param {Object} data.msg object data of tx type
-   * @param {Number} data.sequence transaction counts
-   */
-
-};
-exports.typePrefix = typePrefix;
-
+/**
+ * Creates a new transaction object.
+ * @example
+ * var rawTx = {
+ *   account_number: 1,
+ *   chain_id: 'bnbchain-1000',
+ *   memo: '',
+ *   msg: {},
+ *   type: 'NewOrderMsg',
+ *   sequence: 29,
+ * };
+ * var tx = new Transaction(rawTx);
+ * @property {Buffer} raw The raw vstruct encoded transaction
+ * @param {Number} data.account_number account number
+ * @param {String} data.chain_id bnbChain Id
+ * @param {String} data.memo transaction memo
+ * @param {String} type transaction type
+ * @param {Object} data.msg object data of tx type
+ * @param {Number} data.sequence transaction counts
+ */
 var Transaction =
 /*#__PURE__*/
 function () {
   function Transaction(data) {
     _classCallCheck(this, Transaction);
 
-    if (!txType[data.type]) {
+    if (!_constants.txType[data.type]) {
       throw new TypeError("does not support transaction type: ".concat(data.type));
     }
 
@@ -96,13 +78,13 @@ function () {
       }
 
       var signMsg = {
-        "account_number": this.account_number.toString(),
-        "chain_id": this.chain_id,
-        "data": null,
-        "memo": this.memo,
-        "msgs": [msg],
-        "sequence": this.sequence.toString(),
-        "source": "1"
+        account_number: this.account_number.toString(),
+        chain_id: this.chain_id,
+        data: null,
+        memo: this.memo,
+        msgs: [msg],
+        sequence: this.sequence.toString(),
+        source: "1"
       };
       return encoder.convertObjectToSignBytes(signMsg);
     }
@@ -162,7 +144,7 @@ function () {
         source: 1,
         // web wallet value is 1
         data: "",
-        msgType: txType.StdTx
+        msgType: _constants.txType.StdTx
       };
       var bytes = encoder.marshalBinary(stdTx);
       return bytes.toString("hex");
@@ -194,7 +176,7 @@ function () {
   return Transaction;
 }();
 
-Transaction.txType = txType;
-Transaction.typePrefix = typePrefix;
+Transaction.txType = _constants.txType;
+Transaction.typePrefix = _constants.typePrefix;
 var _default = Transaction;
 exports["default"] = _default;

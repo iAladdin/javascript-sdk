@@ -1,25 +1,7 @@
 import * as crypto from "../crypto/"
 import * as encoder from "../encoder/"
 import { UVarInt } from "../encoder/varint"
-
-export const txType = {
-  MsgSend: "MsgSend",
-  NewOrderMsg: "NewOrderMsg",
-  CancelOrderMsg: "CancelOrderMsg",
-  StdTx: "StdTx",
-  PubKeySecp256k1: "PubKeySecp256k1",
-  SignatureSecp256k1: "SignatureSecp256k1",
-}
-
-export const typePrefix = {
-  MsgSend: "2A2C87FA",
-  NewOrderMsg: "CE6DC043",
-  CancelOrderMsg: "166E681B",
-  StdTx: "F0625DEE",
-  PubKeySecp256k1: "EB5AE987",
-  SignatureSecp256k1: "7FC4A495",
-}
-
+import { txType, typePrefix } from "../constants"
 /**
  * Creates a new transaction object.
  * @example
@@ -42,11 +24,11 @@ export const typePrefix = {
  */
 class Transaction {
   constructor(data) {
-    if(!txType[data.type]) {
+    if (!txType[data.type]) {
       throw new TypeError(`does not support transaction type: ${data.type}`)
     }
 
-    if(!data.chain_id) {
+    if (!data.chain_id) {
       throw new Error("chain id should not be null")
     }
 
@@ -66,17 +48,17 @@ class Transaction {
    * @return {Buffer}
    **/
   getSignBytes(msg) {
-    if(!msg){
+    if (!msg) {
       throw new Error("msg should be an object")
     }
     const signMsg = {
-      "account_number": this.account_number.toString(),
-      "chain_id": this.chain_id,
-      "data": null,
-      "memo": this.memo,
-      "msgs": [msg],
-      "sequence": this.sequence.toString(),
-      "source": "1"
+      account_number: this.account_number.toString(),
+      chain_id: this.chain_id,
+      data: null,
+      memo: this.memo,
+      msgs: [msg],
+      sequence: this.sequence.toString(),
+      source: "1"
     }
     return encoder.convertObjectToSignBytes(signMsg)
   }
@@ -89,12 +71,14 @@ class Transaction {
    **/
   addSignature(pubKey, signature) {
     pubKey = this._serializePubKey(pubKey) // => Buffer
-    this.signatures = [{
-      pub_key: pubKey,
-      signature: signature,
-      account_number: this.account_number,
-      sequence: this.sequence,
-    }]
+    this.signatures = [
+      {
+        pub_key: pubKey,
+        signature: signature,
+        account_number: this.account_number,
+        sequence: this.sequence
+      }
+    ]
     return this
   }
 
@@ -107,7 +91,10 @@ class Transaction {
   sign(privateKey, msg) {
     const signBytes = this.getSignBytes(msg)
     const privKeyBuf = Buffer.from(privateKey, "hex")
-    const signature = crypto.generateSignature(signBytes.toString("hex"), privKeyBuf)
+    const signature = crypto.generateSignature(
+      signBytes.toString("hex"),
+      privKeyBuf
+    )
     this.addSignature(crypto.generatePubKey(privKeyBuf), signature)
     return this
   }
@@ -116,8 +103,8 @@ class Transaction {
    * encode signed transaction to hex which is compatible with amino
    * @param {object} opts msg field
    */
-  serialize(){
-    if(!this.signatures) {
+  serialize() {
+    if (!this.signatures) {
       throw new Error("need signature")
     }
 
@@ -141,9 +128,9 @@ class Transaction {
    * @param {Elliptic.PublicKey} unencodedPubKey
    * @return {Buffer}
    */
-  _serializePubKey(unencodedPubKey){
+  _serializePubKey(unencodedPubKey) {
     let format = 0x2
-    if(unencodedPubKey.y && unencodedPubKey.y.isOdd()){
+    if (unencodedPubKey.y && unencodedPubKey.y.isOdd()) {
       format |= 0x1
     }
     let pubBz = Buffer.concat([

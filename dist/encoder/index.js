@@ -15,7 +15,7 @@ var _varint = _interopRequireWildcard(require("./varint"));
 
 var _encoderHelper = _interopRequireDefault(require("../utils/encoderHelper"));
 
-var _tx = require("../tx/");
+var _constants = require("../constants");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
@@ -209,8 +209,8 @@ var encodeObjectBinary = function encodeObjectBinary(obj, isByteLenPrefix) {
   var bytes = _safeBuffer.Buffer.concat(bufferArr); // add prefix
 
 
-  if (_tx.typePrefix[obj.msgType]) {
-    var prefix = _safeBuffer.Buffer.from(_tx.typePrefix[obj.msgType], "hex");
+  if (_constants.typePrefix[obj.msgType]) {
+    var prefix = _safeBuffer.Buffer.from(_constants.typePrefix[obj.msgType], "hex");
 
     bytes = _safeBuffer.Buffer.concat([prefix, bytes]);
   } // Write byte-length prefixed.

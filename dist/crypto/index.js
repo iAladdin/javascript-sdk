@@ -348,16 +348,12 @@ exports.validateMnemonic = validateMnemonic;
 
 var getPrivateKeyFromMnemonic = function getPrivateKeyFromMnemonic(mnemonic) {
   var derive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  console.log("[Aladdin]", mnemonic);
 
   if (!bip39.validateMnemonic(mnemonic)) {
-    console.log("[Aladdin]", "wrong mnemonic format");
     throw new Error("wrong mnemonic format");
   }
 
-  console.log("[Aladdin] mnemonic okay", bip39);
   var seed = bip39.mnemonicToSeed(mnemonic);
-  console.log("[Aladdin]", seed);
 
   if (derive) {
     var master = _bip["default"].fromSeed(seed);

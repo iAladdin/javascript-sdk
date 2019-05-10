@@ -12,7 +12,8 @@ const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
-  getMarkets: "/api/v1/markets"
+  getMarkets: "/api/v1/markets",
+  getTokens: "/api/v1/tokens"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -515,6 +516,25 @@ export class BncClient {
       return data
     } catch (err) {
       console.warn("getMarkets error", err)
+      return []
+    }
+  }
+
+  /**
+   * get tokens
+   * @param {Number} offset from beggining, default 0
+   * @param {Number} limit, max 1000 is default
+   * @return {Promise} resolves with http response
+   */
+  async getTokens(limit = 1000, offset = 0) {
+    try {
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getTokens}?limit=${limit}&offset=${offset}`
+      )
+      return data
+    } catch (err) {
+      console.warn("getTokens error", err)
       return []
     }
   }

@@ -32,7 +32,8 @@ var api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
-  getMarkets: "/api/v1/markets"
+  getMarkets: "/api/v1/markets",
+  getTokens: "/api/v1/tokens"
 };
 var NETWORK_PREFIX_MAPPING = {
   testnet: "tbnb",
@@ -982,6 +983,57 @@ function () {
       }
 
       return getMarkets;
+    }()
+    /**
+     * get tokens
+     * @param {Number} offset from beggining, default 0
+     * @param {Number} limit, max 1000 is default
+     * @return {Promise} resolves with http response
+     */
+
+  }, {
+    key: "getTokens",
+    value: function () {
+      var _getTokens = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee15() {
+        var limit,
+            offset,
+            data,
+            _args15 = arguments;
+        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+          while (1) {
+            switch (_context15.prev = _context15.next) {
+              case 0:
+                limit = _args15.length > 0 && _args15[0] !== undefined ? _args15[0] : 1000;
+                offset = _args15.length > 1 && _args15[1] !== undefined ? _args15[1] : 0;
+                _context15.prev = 2;
+                _context15.next = 5;
+                return this._httpClient.request("get", "".concat(api.getTokens, "?limit=").concat(limit, "&offset=").concat(offset));
+
+              case 5:
+                data = _context15.sent;
+                return _context15.abrupt("return", data);
+
+              case 9:
+                _context15.prev = 9;
+                _context15.t0 = _context15["catch"](2);
+                console.warn("getTokens error", _context15.t0);
+                return _context15.abrupt("return", []);
+
+              case 13:
+              case "end":
+                return _context15.stop();
+            }
+          }
+        }, _callee15, this, [[2, 9]]);
+      }));
+
+      function getTokens() {
+        return _getTokens.apply(this, arguments);
+      }
+
+      return getTokens;
     }()
     /**
      * Creates a private key and returns it and its address.

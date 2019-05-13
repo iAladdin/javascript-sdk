@@ -45,6 +45,8 @@
         * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
         * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
         * [.getTokens(offset, limit,)](#module_client.BncClient+getTokens) ⇒ <code>Promise</code>
+        * [.getCryptoCurrency()](#module_client.BncClient+getCryptoCurrency) ⇒ <code>Promise</code>
+        * [.getFiatCurrency()](#module_client.BncClient+getFiatCurrency) ⇒ <code>Promise</code>
         * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
         * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
         * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
@@ -85,6 +87,8 @@ The Binance Chain client.
     * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
     * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
     * [.getTokens(offset, limit,)](#module_client.BncClient+getTokens) ⇒ <code>Promise</code>
+    * [.getCryptoCurrency()](#module_client.BncClient+getCryptoCurrency) ⇒ <code>Promise</code>
+    * [.getFiatCurrency()](#module_client.BncClient+getFiatCurrency) ⇒ <code>Promise</code>
     * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
     * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
     * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
@@ -335,6 +339,20 @@ get tokens
 | offset | <code>Number</code> | <code>0</code> | from beggining, default 0 |
 | limit, | <code>Number</code> |  | max 1000 is default |
 
+<a name="module_client.BncClient+getCryptoCurrency"></a>
+
+#### bncClient.getCryptoCurrency() ⇒ <code>Promise</code>
+get crypto currency
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with http response  
+<a name="module_client.BncClient+getFiatCurrency"></a>
+
+#### bncClient.getFiatCurrency() ⇒ <code>Promise</code>
+get fiat currency
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with http response  
 <a name="module_client.BncClient+createAccount"></a>
 
 #### bncClient.createAccount() ⇒ <code>object</code>

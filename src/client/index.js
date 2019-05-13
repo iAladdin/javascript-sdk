@@ -13,7 +13,9 @@ const api = {
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
   getMarkets: "/api/v1/markets",
-  getTokens: "/api/v1/tokens"
+  getTokens: "/api/v1/tokens",
+  getCryptoCurrency: "/api/v1/crypto-currency",
+  getFiatCurrency: "/api/v1/fiat-currency"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -535,6 +537,40 @@ export class BncClient {
       return data
     } catch (err) {
       console.warn("getTokens error", err)
+      return []
+    }
+  }
+
+  /**
+   * get crypto currency
+   * @return {Promise} resolves with http response
+   */
+  async getCryptoCurrency() {
+    try {
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getCryptoCurrency}`
+      )
+      return data
+    } catch (err) {
+      console.warn("getCryptoCurrency error", err)
+      return []
+    }
+  }
+
+  /**
+   * get fiat currency
+   * @return {Promise} resolves with http response
+   */
+  async getFiatCurrency() {
+    try {
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getFiatCurrency}`
+      )
+      return data
+    } catch (err) {
+      console.warn("getFiatCurrency error", err)
       return []
     }
   }

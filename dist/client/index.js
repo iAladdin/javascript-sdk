@@ -33,7 +33,9 @@ var api = {
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
   getMarkets: "/api/v1/markets",
-  getTokens: "/api/v1/tokens"
+  getTokens: "/api/v1/tokens",
+  getCryptoCurrency: "/api/v1/crypto-currency",
+  getFiatCurrency: "/api/v1/fiat-currency"
 };
 var NETWORK_PREFIX_MAPPING = {
   testnet: "tbnb",
@@ -1034,6 +1036,94 @@ function () {
       }
 
       return getTokens;
+    }()
+    /**
+     * get crypto currency
+     * @return {Promise} resolves with http response
+     */
+
+  }, {
+    key: "getCryptoCurrency",
+    value: function () {
+      var _getCryptoCurrency = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee16() {
+        var data;
+        return regeneratorRuntime.wrap(function _callee16$(_context16) {
+          while (1) {
+            switch (_context16.prev = _context16.next) {
+              case 0:
+                _context16.prev = 0;
+                _context16.next = 3;
+                return this._httpClient.request("get", "".concat(api.getCryptoCurrency));
+
+              case 3:
+                data = _context16.sent;
+                return _context16.abrupt("return", data);
+
+              case 7:
+                _context16.prev = 7;
+                _context16.t0 = _context16["catch"](0);
+                console.warn("getCryptoCurrency error", _context16.t0);
+                return _context16.abrupt("return", []);
+
+              case 11:
+              case "end":
+                return _context16.stop();
+            }
+          }
+        }, _callee16, this, [[0, 7]]);
+      }));
+
+      function getCryptoCurrency() {
+        return _getCryptoCurrency.apply(this, arguments);
+      }
+
+      return getCryptoCurrency;
+    }()
+    /**
+     * get fiat currency
+     * @return {Promise} resolves with http response
+     */
+
+  }, {
+    key: "getFiatCurrency",
+    value: function () {
+      var _getFiatCurrency = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee17() {
+        var data;
+        return regeneratorRuntime.wrap(function _callee17$(_context17) {
+          while (1) {
+            switch (_context17.prev = _context17.next) {
+              case 0:
+                _context17.prev = 0;
+                _context17.next = 3;
+                return this._httpClient.request("get", "".concat(api.getFiatCurrency));
+
+              case 3:
+                data = _context17.sent;
+                return _context17.abrupt("return", data);
+
+              case 7:
+                _context17.prev = 7;
+                _context17.t0 = _context17["catch"](0);
+                console.warn("getFiatCurrency error", _context17.t0);
+                return _context17.abrupt("return", []);
+
+              case 11:
+              case "end":
+                return _context17.stop();
+            }
+          }
+        }, _callee17, this, [[0, 7]]);
+      }));
+
+      function getFiatCurrency() {
+        return _getFiatCurrency.apply(this, arguments);
+      }
+
+      return getFiatCurrency;
     }()
     /**
      * Creates a private key and returns it and its address.

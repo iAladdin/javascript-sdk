@@ -355,6 +355,25 @@ describe("BncClient test", async () => {
     expect(tokens[0]).toHaveProperty("total_supply")
   })
 
+  it("get fiat currency", async () => {
+    const client = await getClient(false)
+    const { result: fiatCurrencyMap, status } = await client.getFiatCurrency()
+    expect(status).toBe(200)
+    expect(Object.keys(fiatCurrencyMap).length).toBeGreaterThan(0)
+    expect(fiatCurrencyMap["CNY_USD"]).toBeGreaterThan(0)
+  })
+
+  it("get crypto currency", async () => {
+    const client = await getClient(false)
+    const {
+      result: cryptoCurrencyMap,
+      status
+    } = await client.getCryptoCurrency()
+    expect(status).toBe(200)
+    expect(Object.keys(cryptoCurrencyMap).length).toBeGreaterThan(0)
+    expect(cryptoCurrencyMap["BNB_USDT"]).toBeGreaterThan(0)
+  })
+
   it("check number when transfer", async () => {
     const client = await getClient(true)
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)

@@ -66,7 +66,7 @@ function () {
         };
       })["catch"](function (err) {
         // TODO: what if it's not json?
-        console.error("error in HttpRequest#request", err, err.statusCode);
+        console.log("error in HttpRequest#request", err, err.statusCode);
         var error = err;
 
         try {

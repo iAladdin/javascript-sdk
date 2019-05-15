@@ -4,7 +4,7 @@ import axios from "axios"
  * @alias utils.HttpRequest
  */
 class HttpRequest {
-  constructor(baseURL){
+  constructor(baseURL) {
     this.httpClient = axios.create({ baseURL })
   }
 
@@ -35,12 +35,16 @@ class HttpRequest {
       .request(options)
       .then(response => {
         return { result: response.data, status: response.status }
-      }).catch(err => {
+      })
+      .catch(err => {
         // TODO: what if it's not json?
-        console.error("error in HttpRequest#request", err, err.statusCode)
+        console.log("error in HttpRequest#request", err, err.statusCode)
         let error = err
         try {
-          const msgObj = err.response && err.response.data && JSON.parse(err.response.data.message)
+          const msgObj =
+            err.response &&
+            err.response.data &&
+            JSON.parse(err.response.data.message)
           error = new Error(msgObj.message)
           error.code = msgObj.code
           error.abci_code = msgObj.abci_code

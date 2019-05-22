@@ -1182,29 +1182,25 @@ function () {
                   url = url.concat("&side=".concat(side));
                 }
 
-                if (txAsset) {
-                  url = url.concat("&txAsset=".concat(txAsset));
-                }
-
-                _context18.next = 14;
+                _context18.next = 13;
                 return this._httpClient.request("get", url);
 
-              case 14:
+              case 13:
                 data = _context18.sent;
                 return _context18.abrupt("return", data);
 
-              case 18:
-                _context18.prev = 18;
+              case 17:
+                _context18.prev = 17;
                 _context18.t0 = _context18["catch"](1);
                 console.warn("getTransactions error", _context18.t0);
                 return _context18.abrupt("return", []);
 
-              case 22:
+              case 21:
               case "end":
                 return _context18.stop();
             }
           }
-        }, _callee18, this, [[1, 18]]);
+        }, _callee18, this, [[1, 17]]);
       }));
 
       function getTransactions(_x21) {

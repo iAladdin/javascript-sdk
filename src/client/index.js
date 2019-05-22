@@ -627,9 +627,6 @@ export class BncClient {
       if (side) {
         url = url.concat(`&side=${side}`)
       }
-      if (txAsset) {
-        url = url.concat(`&txAsset=${txAsset}`)
-      }
 
       const data = await this._httpClient.request("get", url)
       return data

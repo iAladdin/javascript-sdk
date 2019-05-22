@@ -15,7 +15,8 @@ const api = {
   getMarkets: "/api/v1/markets",
   getTokens: "/api/v1/tokens",
   getCryptoCurrency: "/api/v1/crypto-currency",
-  getFiatCurrency: "/api/v1/fiat-currency"
+  getFiatCurrency: "/api/v1/fiat-currency",
+  getTransactions: "/api/v1/transactions"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -571,6 +572,69 @@ export class BncClient {
       return data
     } catch (err) {
       console.warn("getFiatCurrency error", err)
+      return []
+    }
+  }
+
+  /**
+   * get transactions
+   * @param {String} address address required
+   * @param {String} blockHeight blockHeight
+   * @param {String} endTime endTime in Milliseconds
+   * @param {String} side transaction side. Allowed value: [ RECEIVE, SEND]
+   * @param {String} startTime start time in Milliseconds
+   * @param {String} txAsset txAsset
+   * @param {String} txType transaction type. Allowed value: [ NEW_ORDER,ISSUE_TOKEN,BURN_TOKEN,LIST_TOKEN,CANCEL_ORDER,FREEZE_TOKEN,UN_FREEZE_TOKEN,TRANSFER,PROPOSAL,VOTE,MINT,DEPOSIT]
+   * @param {Number} offset, from beggining, default 0
+   * @param {Number} limit, max 1000 is default
+   * @return {Promise} resolves with http response
+   */
+  async getTransactions(
+    address = this.address,
+    txAsset,
+    txType,
+    blockHeight,
+    startTime,
+    endTime,
+    side,
+    limit = 1000,
+    offset = 0
+  ) {
+    try {
+      const endTS = endTime ? endTime : Date.now()
+      const startTS = startTime
+        ? startTime
+        : Date.now() - 12 * 24 * 60 * 60 * 1000
+
+      let url = `${
+        api.getTransactions
+      }?address=${address}&limit=${limit}&offset=${offset}`
+      if (txAsset) {
+        url = url.concat(`&txAsset=${txAsset}`)
+      }
+      if (txType) {
+        url = url.concat(`&txType=${txType}`)
+      }
+      if (blockHeight) {
+        url = url.concat(`&blockHeight=${blockHeight}`)
+      }
+      if (startTS) {
+        url = url.concat(`&startTime=${startTS}`)
+      }
+      if (endTS) {
+        url = url.concat(`&endTime=${endTS}`)
+      }
+      if (side) {
+        url = url.concat(`&side=${side}`)
+      }
+      if (txAsset) {
+        url = url.concat(`&txAsset=${txAsset}`)
+      }
+
+      const data = await this._httpClient.request("get", url)
+      return data
+    } catch (err) {
+      console.warn("getTokens error", err)
       return []
     }
   }

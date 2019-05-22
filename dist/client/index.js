@@ -35,7 +35,8 @@ var api = {
   getMarkets: "/api/v1/markets",
   getTokens: "/api/v1/tokens",
   getCryptoCurrency: "/api/v1/crypto-currency",
-  getFiatCurrency: "/api/v1/fiat-currency"
+  getFiatCurrency: "/api/v1/fiat-currency",
+  getTransactions: "/api/v1/transactions"
 };
 var NETWORK_PREFIX_MAPPING = {
   testnet: "tbnb",
@@ -1124,6 +1125,113 @@ function () {
       }
 
       return getFiatCurrency;
+    }()
+    /**
+     * get transactions
+     * @param {String} address address required
+     * @param {String} blockHeight blockHeight
+     * @param {String} endTime endTime in Milliseconds
+     * @param {String} side transaction side. Allowed value: [ RECEIVE, SEND]
+     * @param {String} startTime start time in Milliseconds
+     * @param {String} txAsset txAsset
+     * @param {String} txType transaction type. Allowed value: [ NEW_ORDER,ISSUE_TOKEN,BURN_TOKEN,LIST_TOKEN,CANCEL_ORDER,FREEZE_TOKEN,UN_FREEZE_TOKEN,TRANSFER,PROPOSAL,VOTE,MINT,DEPOSIT]
+     * @param {Number} offset, from beggining, default 0
+     * @param {Number} limit, max 1000 is default
+     * @return {Promise} resolves with http response
+     */
+
+  }, {
+    key: "getTransactions",
+    value: function () {
+      var _getTransactions = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee18() {
+        var address,
+            txAsset,
+            txType,
+            blockHeight,
+            startTime,
+            endTime,
+            side,
+            limit,
+            offset,
+            endTS,
+            startTS,
+            url,
+            data,
+            _args18 = arguments;
+        return regeneratorRuntime.wrap(function _callee18$(_context18) {
+          while (1) {
+            switch (_context18.prev = _context18.next) {
+              case 0:
+                address = _args18.length > 0 && _args18[0] !== undefined ? _args18[0] : this.address;
+                txAsset = _args18.length > 1 ? _args18[1] : undefined;
+                txType = _args18.length > 2 ? _args18[2] : undefined;
+                blockHeight = _args18.length > 3 ? _args18[3] : undefined;
+                startTime = _args18.length > 4 ? _args18[4] : undefined;
+                endTime = _args18.length > 5 ? _args18[5] : undefined;
+                side = _args18.length > 6 ? _args18[6] : undefined;
+                limit = _args18.length > 7 && _args18[7] !== undefined ? _args18[7] : 1000;
+                offset = _args18.length > 8 && _args18[8] !== undefined ? _args18[8] : 0;
+                _context18.prev = 9;
+                endTS = endTime ? endTime : Date.now();
+                startTS = startTime ? startTime : Date.now() - 12 * 24 * 60 * 60 * 1000;
+                url = "".concat(api.getTransactions, "?address=").concat(address, "&limit=").concat(limit, "&offset=").concat(offset);
+
+                if (txAsset) {
+                  url = url.concat("&txAsset=".concat(txAsset));
+                }
+
+                if (txType) {
+                  url = url.concat("&txType=".concat(txType));
+                }
+
+                if (blockHeight) {
+                  url = url.concat("&blockHeight=".concat(blockHeight));
+                }
+
+                if (startTS) {
+                  url = url.concat("&startTime=".concat(startTS));
+                }
+
+                if (endTS) {
+                  url = url.concat("&endTime=".concat(endTS));
+                }
+
+                if (side) {
+                  url = url.concat("&side=".concat(side));
+                }
+
+                if (txAsset) {
+                  url = url.concat("&txAsset=".concat(txAsset));
+                }
+
+                _context18.next = 22;
+                return this._httpClient.request("get", url);
+
+              case 22:
+                data = _context18.sent;
+                return _context18.abrupt("return", data);
+
+              case 26:
+                _context18.prev = 26;
+                _context18.t0 = _context18["catch"](9);
+                console.warn("getTokens error", _context18.t0);
+                return _context18.abrupt("return", []);
+
+              case 30:
+              case "end":
+                return _context18.stop();
+            }
+          }
+        }, _callee18, this, [[9, 26]]);
+      }));
+
+      function getTransactions() {
+        return _getTransactions.apply(this, arguments);
+      }
+
+      return getTransactions;
     }()
     /**
      * Creates a private key and returns it and its address.

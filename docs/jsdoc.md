@@ -47,6 +47,7 @@
         * [.getTokens(offset, limit,)](#module_client.BncClient+getTokens) ⇒ <code>Promise</code>
         * [.getCryptoCurrency()](#module_client.BncClient+getCryptoCurrency) ⇒ <code>Promise</code>
         * [.getFiatCurrency()](#module_client.BncClient+getFiatCurrency) ⇒ <code>Promise</code>
+        * [.getTransactions(address, blockHeight, endTime, side, startTime, txAsset, txType, offset,, limit,)](#module_client.BncClient+getTransactions) ⇒ <code>Promise</code>
         * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
         * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
         * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
@@ -89,6 +90,7 @@ The Binance Chain client.
     * [.getTokens(offset, limit,)](#module_client.BncClient+getTokens) ⇒ <code>Promise</code>
     * [.getCryptoCurrency()](#module_client.BncClient+getCryptoCurrency) ⇒ <code>Promise</code>
     * [.getFiatCurrency()](#module_client.BncClient+getFiatCurrency) ⇒ <code>Promise</code>
+    * [.getTransactions(address, blockHeight, endTime, side, startTime, txAsset, txType, offset,, limit,)](#module_client.BncClient+getTransactions) ⇒ <code>Promise</code>
     * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
     * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
     * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
@@ -353,6 +355,26 @@ get fiat currency
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 **Returns**: <code>Promise</code> - resolves with http response  
+<a name="module_client.BncClient+getTransactions"></a>
+
+#### bncClient.getTransactions(address, blockHeight, endTime, side, startTime, txAsset, txType, offset,, limit,) ⇒ <code>Promise</code>
+get transactions
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with http response  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>String</code> | address required |
+| blockHeight | <code>String</code> | blockHeight |
+| endTime | <code>String</code> | endTime in Milliseconds |
+| side | <code>String</code> | transaction side. Allowed value: [ RECEIVE, SEND] |
+| startTime | <code>String</code> | start time in Milliseconds |
+| txAsset | <code>String</code> | txAsset |
+| txType | <code>String</code> | transaction type. Allowed value: [ NEW_ORDER,ISSUE_TOKEN,BURN_TOKEN,LIST_TOKEN,CANCEL_ORDER,FREEZE_TOKEN,UN_FREEZE_TOKEN,TRANSFER,PROPOSAL,VOTE,MINT,DEPOSIT] |
+| offset, | <code>Number</code> | from beggining, default 0 |
+| limit, | <code>Number</code> | max 1000 is default |
+
 <a name="module_client.BncClient+createAccount"></a>
 
 #### bncClient.createAccount() ⇒ <code>object</code>

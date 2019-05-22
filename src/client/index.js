@@ -589,7 +589,7 @@ export class BncClient {
    * @param {Number} limit, max 1000 is default
    * @return {Promise} resolves with http response
    */
-  async getTransactions(
+  async getTransactions({
     address = this.address,
     txAsset,
     txType,
@@ -599,7 +599,7 @@ export class BncClient {
     side,
     limit = 1000,
     offset = 0
-  ) {
+  }) {
     try {
       const endTS = endTime ? endTime : Date.now()
       const startTS = startTime
@@ -634,7 +634,7 @@ export class BncClient {
       const data = await this._httpClient.request("get", url)
       return data
     } catch (err) {
-      console.warn("getTokens error", err)
+      console.warn("getTransactions error", err)
       return []
     }
   }

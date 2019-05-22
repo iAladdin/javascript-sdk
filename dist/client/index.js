@@ -1145,35 +1145,15 @@ function () {
     value: function () {
       var _getTransactions = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee18() {
-        var address,
-            txAsset,
-            txType,
-            blockHeight,
-            startTime,
-            endTime,
-            side,
-            limit,
-            offset,
-            endTS,
-            startTS,
-            url,
-            data,
-            _args18 = arguments;
+      regeneratorRuntime.mark(function _callee18(_ref3) {
+        var _ref3$address, address, txAsset, txType, blockHeight, startTime, endTime, side, _ref3$limit, limit, _ref3$offset, offset, endTS, startTS, url, data;
+
         return regeneratorRuntime.wrap(function _callee18$(_context18) {
           while (1) {
             switch (_context18.prev = _context18.next) {
               case 0:
-                address = _args18.length > 0 && _args18[0] !== undefined ? _args18[0] : this.address;
-                txAsset = _args18.length > 1 ? _args18[1] : undefined;
-                txType = _args18.length > 2 ? _args18[2] : undefined;
-                blockHeight = _args18.length > 3 ? _args18[3] : undefined;
-                startTime = _args18.length > 4 ? _args18[4] : undefined;
-                endTime = _args18.length > 5 ? _args18[5] : undefined;
-                side = _args18.length > 6 ? _args18[6] : undefined;
-                limit = _args18.length > 7 && _args18[7] !== undefined ? _args18[7] : 1000;
-                offset = _args18.length > 8 && _args18[8] !== undefined ? _args18[8] : 0;
-                _context18.prev = 9;
+                _ref3$address = _ref3.address, address = _ref3$address === void 0 ? this.address : _ref3$address, txAsset = _ref3.txAsset, txType = _ref3.txType, blockHeight = _ref3.blockHeight, startTime = _ref3.startTime, endTime = _ref3.endTime, side = _ref3.side, _ref3$limit = _ref3.limit, limit = _ref3$limit === void 0 ? 1000 : _ref3$limit, _ref3$offset = _ref3.offset, offset = _ref3$offset === void 0 ? 0 : _ref3$offset;
+                _context18.prev = 1;
                 endTS = endTime ? endTime : Date.now();
                 startTS = startTime ? startTime : Date.now() - 12 * 24 * 60 * 60 * 1000;
                 url = "".concat(api.getTransactions, "?address=").concat(address, "&limit=").concat(limit, "&offset=").concat(offset);
@@ -1206,28 +1186,28 @@ function () {
                   url = url.concat("&txAsset=".concat(txAsset));
                 }
 
-                _context18.next = 22;
+                _context18.next = 14;
                 return this._httpClient.request("get", url);
 
-              case 22:
+              case 14:
                 data = _context18.sent;
                 return _context18.abrupt("return", data);
 
-              case 26:
-                _context18.prev = 26;
-                _context18.t0 = _context18["catch"](9);
-                console.warn("getTokens error", _context18.t0);
+              case 18:
+                _context18.prev = 18;
+                _context18.t0 = _context18["catch"](1);
+                console.warn("getTransactions error", _context18.t0);
                 return _context18.abrupt("return", []);
 
-              case 30:
+              case 22:
               case "end":
                 return _context18.stop();
             }
           }
-        }, _callee18, this, [[9, 26]]);
+        }, _callee18, this, [[1, 18]]);
       }));
 
-      function getTransactions() {
+      function getTransactions(_x21) {
         return _getTransactions.apply(this, arguments);
       }
 

@@ -42,9 +42,7 @@ class HttpRequest {
         let error = err
         try {
           const msgObj =
-            err.response &&
-            err.response.data &&
-            JSON.parse(err.response.data.message)
+            err.response && err.response.data && err.response.data.message
           error = new Error(msgObj.message)
           error.code = msgObj.code
           error.abci_code = msgObj.abci_code
